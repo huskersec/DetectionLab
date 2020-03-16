@@ -60,7 +60,7 @@ if ((gwmi win32_computersystem).partofdomain -eq $false) {
   $dnslistenip
   dnscmd /ResetListenAddresses  $dnslistenip
 
-  $nics=Get-WmiObject "Win32_NetworkAdapterConfiguration where IPEnabled='TRUE'" |? { $_.IPAddress[0] -ilike "10.*" }
+  $nics=Get-WmiObject "Win32_NetworkAdapterConfiguration where IPEnabled='TRUE'" |? { $_.IPAddress[0] -ilike "10.0.*" }
   foreach($nic in $nics)
   {
     $nic.DomainDNSRegistrationEnabled = $false
@@ -73,7 +73,7 @@ if ((gwmi win32_computersystem).partofdomain -eq $false) {
 
  foreach($RR in $RRs)
  {
-  if ( (Select-Object  -InputObject $RR HostName,RecordType -ExpandProperty RecordData).IPv4Address -ilike "10.*")
+  if ( (Select-Object  -InputObject $RR HostName,RecordType -ExpandProperty RecordData).IPv4Address -ilike "10.0.*")
   {
    Remove-DnsServerResourceRecord -ZoneName $domain -RRType A -Name "@" -RecordData $RR.RecordData.IPv4Address -Confirm
   }
